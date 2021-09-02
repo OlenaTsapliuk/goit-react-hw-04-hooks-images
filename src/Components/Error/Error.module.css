@@ -1,0 +1,16 @@
+.wrapper {
+  margin: 0 auto;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.textContent {
+  margin-top: 20px;
+  color: red;
+  font-weight: 500;
+  font-size: 26px;
+}
+.img {
+  margin-left: auto;
+  margin-right: auto;
+}
