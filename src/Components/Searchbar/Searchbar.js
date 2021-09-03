@@ -1,55 +1,101 @@
-import { Component } from "react";
+import { useState} from "react";
 import PropTypes from "prop-types";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import s from "./Searchbar.module.css";
 
-class Searchbar extends Component {
-  state = {
-    imageName: "",
+function Searchbar ({onSubmit}){
+  const [imageName, setImageName] = useState('');
+
+ const handleChange = (e) => {
+   setImageName(e.currentTarget.value.toLowerCase());
   };
 
-  handleChange = (e) => {
-    this.setState({ imageName: e.currentTarget.value.toLowerCase() });
-  };
-
-  handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (this.state.imageName.trim() === "") {
+    if (imageName.trim() === "") {
       toast.info("Enter image name");
       return;
     }
 
-    this.props.onSubmit(this.state.imageName);
-    this.setState({ imageName: "" });
+    onSubmit(imageName);
+    setImageName('');
   };
 
-  render() {
     return (
       <header className={s.searchbar}>
-        <form className={s.searchForm} onSubmit={this.handleSubmit}>
+        <form className={s.searchForm} onSubmit={handleSubmit}>
           <button type="submit" className={s.button}>
             <span className={s.label}>Search</span>
           </button>
 
           <input
             className={s.input}
-            onChange={this.handleChange}
+            onChange={handleChange}
             type="text"
             autoComplete="off"
             autoFocus
             placeholder="Search images and photos"
-            value={this.state.imageName}
+            value={imageName}
           />
         </form>
       </header>
     );
   }
-}
+
 
 Searchbar.propTypes = {
   onSubmit: PropTypes.func.isRequired,
-  state: PropTypes.object.isRequired,
 };
 
 export default Searchbar;
+
+// class Searchbar extends Component {
+//   state = {
+//     imageName: "",
+//   };
+
+//   handleChange = (e) => {
+//     this.setState({ imageName: e.currentTarget.value.toLowerCase() });
+//   };
+
+//   handleSubmit = (e) => {
+//     e.preventDefault();
+//     if (this.state.imageName.trim() === "") {
+//       toast.info("Enter image name");
+//       return;
+//     }
+
+//     this.props.onSubmit(this.state.imageName);
+//     this.setState({ imageName: "" });
+//   };
+
+//   render() {
+//     return (
+//       <header className={s.searchbar}>
+//         <form className={s.searchForm} onSubmit={this.handleSubmit}>
+//           <button type="submit" className={s.button}>
+//             <span className={s.label}>Search</span>
+//           </button>
+
+//           <input
+//             className={s.input}
+//             onChange={this.handleChange}
+//             type="text"
+//             autoComplete="off"
+//             autoFocus
+//             placeholder="Search images and photos"
+//             value={this.state.imageName}
+//           />
+//         </form>
+//       </header>
+//     );
+//   }
+// }
+
+// Searchbar.propTypes = {
+//   onSubmit: PropTypes.func.isRequired,
+//   state: PropTypes.object.isRequired,
+// };
+
+// export default Searchbar;
