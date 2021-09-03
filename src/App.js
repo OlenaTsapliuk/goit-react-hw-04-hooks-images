@@ -1,7 +1,7 @@
 import { ToastContainer, toast } from "react-toastify";
 import "./App.css";
 import Searchbar from "./Components/Searchbar";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import ImageGallery from "./Components/ImageGallery";
 import imageApiService from "./services/ImagesAPI/ImagesApi";
 import Button from "./Components/Button/Button";
@@ -19,7 +19,7 @@ function App() {
   const [showModal, setShowModal] = useState(false);
   const [largeImageURL, setLargeImageURL] = useState('');
   const [tags, setTags] = useState('');
-  
+
 
   useEffect(() => {
     if (!imageName) {
@@ -27,55 +27,44 @@ function App() {
     }
 
     function fetchImages() {
-    setIsLoading(true);
-    imageApiService(imageName, page)
-      .then((images) => {
-        setImages((prevState) => [...prevState, ...images]);
-        setPage((prevState) => prevState + 1);
-        
-        if (images.length === 0 && page > 1) {
-          toast.error("There are no more images in this category");
-          return;
-        }
-        if (images.length === 0) {
-          throw new Error("No matches were found! Try again!");
-        }
-      })
-      .catch((error) =>
-        setError("Something went wrong. Try again.")
-      )
-      .finally(() => {
-        setIsLoading(false);
+      setIsLoading(true);
+      imageApiService(imageName, page)
+        .then((images) => {
+          setImages((prevState) => [...prevState, ...images]);
 
-        window.scrollTo({
-          top: document.documentElement.scrollHeight,
-          behavior: "smooth",
+          if (images.length === 0 && page > 1) {
+            toast.error("There are no more images in this category");
+            return;
+          }
+          if (images.length === 0) {
+            throw new Error("No matches were found! Try again!");
+          }
+        })
+        .catch((error) =>
+          setError("Something went wrong. Try again.")
+        )
+        .finally(() => {
+          setIsLoading(false);
+
+          window.scrollTo({
+            top: document.documentElement.scrollHeight,
+            behavior: "smooth",
+          });
         });
-      });
-  };
+    };
 
     fetchImages();
-  },[imageName,page]);
-
-  // componentDidUpdate(prevProps, prevState) {
-  //   const { imageName, page } = this.state;
-  //   if (prevState.imageName !== imageName) {
-  //     this.fetchImages(imageName, page);
-  //   }
-  // }
+  }, [imageName, page]);
 
   const searchImage = (imageName) => {
     setImageName(imageName);
     setPage(1);
     setImages([]);
     setError(null);
-   
+
   };
 
-  
-
   const buttonClickOnMore = () => {
-    // fetchImages();
     setPage((state) => state + 1);
   };
 
@@ -83,39 +72,39 @@ function App() {
     setShowModal(!showModal);
   };
 
- const  bigImage = (e) => {
+  const bigImage = (e) => {
     if (e.target.nodeName !== "IMG") {
       return;
     }
-   setLargeImageURL(e.target.dataset.url);
-   setTags(e.target.alt);
-   
-   toggleModal();
+    setLargeImageURL(e.target.dataset.url);
+    setTags(e.target.alt);
+
+    toggleModal();
   };
 
-    return (
-      <Container>
-        <Searchbar onSubmit={searchImage} />
+  return (
+    <Container>
+      <Searchbar onSubmit={searchImage} />
 
-        {error && <Error textError={error} />}
+      {error && <Error textError={error} />}
 
-        {images.length > 0 && !error && (
-          <ImageGallery images={images} onClick={bigImage} />
-        )}
-        {isLoading && <Spinner />}
+      {images.length > 0 && !error && (
+        <ImageGallery images={images} onClick={bigImage} />
+      )}
+      {isLoading && <Spinner />}
 
-        {!isLoading && images.length > 0 && (
-          <Button buttonClick={buttonClickOnMore} />
-        )}
-        {showModal && (
-          <Modal onClose={toggleModal}>
-            <img src={largeImageURL} alt={tags} />
-          </Modal>
-        )}
-        <ToastContainer autoClose={3000} />
-      </Container>
-    );
-  
+      {!isLoading && images.length > 0 && (
+        <Button buttonClick={buttonClickOnMore} />
+      )}
+      {showModal && (
+        <Modal onClose={toggleModal}>
+          <img src={largeImageURL} alt={tags} />
+        </Modal>
+      )}
+      <ToastContainer autoClose={3000} />
+    </Container>
+  );
+
 }
 export default App;
 
